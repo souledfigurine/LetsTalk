@@ -84,16 +84,22 @@ const OpenLetterPostScreen: React.FC<Props> = ({
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.container}>
+        <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={goBack}>
             <AntDesign name="left" size={24} color={Colors.text} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Open Letter</Text>
           <View style={styles.rectangle}></View>
         </View>
-        <KeyboardAvoidingView style={{ paddingBottom: 233 }}>
+        <View style={{ flex: 1 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView
+              contentContainerStyle={{
+                flexDirection: "column",
+                paddingBottom: Spacing * 2,
+              }}
+            >
+              {/* user info */}
               <View style={styles.user}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Ionicons name="person-circle" size={24} color="black" />
@@ -107,19 +113,18 @@ const OpenLetterPostScreen: React.FC<Props> = ({
               <Text style={styles.body}>{post.body}</Text>
             </ScrollView>
           </TouchableWithoutFeedback>
-
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={text}
-              onChangeText={setText}
-              placeholder="Type your message..."
-            />
-            <TouchableOpacity onPress={sendMessage}>
-              <Text style={styles.sendButton}>Send</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Type your message..."
+          />
+          <TouchableOpacity onPress={sendMessage}>
+            <Text style={styles.sendButton}>Send</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     lineHeight: 27,
   },
-  container: {
+  header: {
     textAlignVertical: "center",
     backgroundColor: Colors.lightyellow,
     paddingBottom: 28,

@@ -116,7 +116,6 @@ const OpenJioPost: React.FC<Props> = ({ navigation: { navigate } }) => {
               <Text style={styles.title}>{post.title}</Text>
               {/* post body */}
               <Text style={styles.body}>{post.body}</Text>
-              {/* input container */}
             </ScrollView>
           </TouchableWithoutFeedback>
         </View>
