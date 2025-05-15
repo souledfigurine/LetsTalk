@@ -36,6 +36,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { Ionicons } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "OpenJio">;
 
@@ -68,7 +69,7 @@ const OpenJioScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
   return (
     <GestureHandlerRootView>
-      <View>
+      <View style={{ flex: 1 }}>
         <MainHeader title={"Open Jio!"} />
         <View style={styles.createButton}>
           <TouchableOpacity
@@ -81,7 +82,7 @@ const OpenJioScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ paddingBottom: 175, zIndex: 1 }}>
+        <View style={{ zIndex: 1 }}>
           <FlatList
             data={post}
             numColumns={2}
@@ -91,34 +92,28 @@ const OpenJioScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
-                  style={styles.post}
+                  style={styles.container}
                   onPress={() => {
                     navigation.navigate("OpenJioPost", {
                       post: item,
                     });
                   }}
                 >
-                  <View style={styles.user}>
-                    <Ionicons name="person-circle" size={20} color="black" />
-                    <Text style={styles.username}> {item.Username} </Text>
-                  </View>
+                  <View style={styles.content}>
+                    <View style={styles.user}>
+                      <Ionicons name="person-circle" size={20} color="black" />
+                      <Text style={styles.username}> {item.Username} </Text>
+                    </View>
 
-                  <Text
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                    style={styles.title}
-                  >
-                    {" "}
-                    {item.title}{" "}
-                  </Text>
-                  <Text
-                    numberOfLines={5}
-                    ellipsizeMode="tail"
-                    style={styles.body}
-                  >
-                    {" "}
-                    {item.body}{" "}
-                  </Text>
+                    <Text ellipsizeMode="tail" style={styles.title}>
+                      {" "}
+                      {item.title}{" "}
+                    </Text>
+                    <Text ellipsizeMode="tail" style={styles.body}>
+                      {" "}
+                      {item.body}{" "}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               );
             }}
@@ -131,18 +126,21 @@ const OpenJioScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
 export default OpenJioScreen;
 
+const numColumns = 2;
+const screenWidth = Dimensions.get("window").width;
+const horizontalPadding = 20; // paddingHorizontal in your FlatList container
+const gapBetweenItems = 20; // gap in columnWrapperStyle
+
+const itemWidth =
+  (screenWidth - horizontalPadding * 2 - gapBetweenItems) / numColumns;
+
 const styles = StyleSheet.create({
-  masonry: {
-    paddingHorizontal: 25,
-  },
   title: {
     fontSize: 15,
     color: Colors.darkText,
     fontFamily: Font["poppins-semiBold"],
     textAlign: "left",
     textAlignVertical: "center",
-    marginBottom: Spacing,
-    marginHorizontal: Spacing,
   },
   body: {
     fontSize: 11,
@@ -150,15 +148,14 @@ const styles = StyleSheet.create({
     fontFamily: Font["inter-medium"],
     textAlign: "left",
     textAlignVertical: "center",
-    margin: Spacing,
-    paddingBottom: 10,
     lineHeight: 17.5,
+    flexShrink: 1,
+    flexWrap: "wrap",
   },
   user: {
     textAlign: "left",
     textAlignVertical: "center",
-    paddingBottom: 2,
-    marginTop: Spacing,
+    paddingBottom: 1,
     marginHorizontal: Spacing,
     flexDirection: "row",
   },
@@ -169,24 +166,35 @@ const styles = StyleSheet.create({
     textAlign: "left",
     textAlignVertical: "center",
   },
-  post: {
+  container: {
     backgroundColor: Colors.lightPrimary,
     alignItems: "flex-start",
-    justifyContent: "top",
+    justifyContent: "flex-start",
     flexDirection: "column",
-    display: "flex",
     flex: 1,
     borderRadius: 15,
-    width: 165,
-    height: 170,
+    width: itemWidth,
+    height: 200,
     marginLeft: 10,
-    zIndex: 1,
+    padding: Spacing,
+  },
+  content: {
+    backgroundColor: Colors.lightPrimary,
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    flex: 1,
+    borderRadius: 15,
+    width: itemWidth,
+    height: 200,
+
+    padding: Spacing,
   },
   createButton: {
     position: "absolute",
     zIndex: 5,
     right: 50,
-    top: 550,
+    bottom: 30,
     backgroundColor: Colors.lightyellow,
     borderRadius: 100,
     shadowRadius: 2,

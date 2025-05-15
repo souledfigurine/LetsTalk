@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: itemWidth,
     height: 200,
-
     padding: Spacing,
   },
   createButton: {
