@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   View,
   StyleSheet,
@@ -86,43 +87,50 @@ const OpenJioPost: React.FC<Props> = ({ navigation: { navigate } }) => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.container}>
+        <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={goBack}>
             <AntDesign name="left" size={24} color={Colors.text} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Open Jio!</Text>
           <View style={styles.rectangle}></View>
         </View>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View>
-            <View style={styles.user}>
-              <Ionicons name="person-circle" size={24} color="black" />
-              <Text style={styles.username}> {post.Username} </Text>
-              {formattedTimestamp && (
-                <Text style={styles.timestamp}>{formattedTimestamp}</Text>
-              )}
-            </View>
-            <Text style={styles.title}>{post.title}</Text>
-            <Text style={styles.body}>{post.body}</Text>
-          </View>
-        </TouchableWithoutFeedback>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={90}
-        >
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={text}
-              onChangeText={setText}
-              placeholder="Type your message..."
-            />
-            <TouchableOpacity onPress={sendMessage}>
-              <Text style={styles.sendButton}>Send</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+        <View style={{ flex: 1 }}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView
+              contentContainerStyle={{
+                flexDirection: "column",
+                paddingBottom: Spacing * 2,
+              }}
+            >
+              {/* user info */}
+              <View style={styles.user}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Ionicons name="person-circle" size={24} color="black" />
+                  <Text style={styles.username}> {post.Username} </Text>
+                </View>
+                {formattedTimestamp && (
+                  <Text style={styles.timestamp}>{formattedTimestamp}</Text>
+                )}
+              </View>
+              {/* post title */}
+              <Text style={styles.title}>{post.title}</Text>
+              {/* post body */}
+              <Text style={styles.body}>{post.body}</Text>
+              {/* input container */}
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Type your message..."
+          />
+          <TouchableOpacity onPress={sendMessage}>
+            <Text style={styles.sendButton}>Send</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -132,13 +140,13 @@ export default OpenJioPost;
 
 const styles = StyleSheet.create({
   user: {
-    textAlign: "left",
-    textAlignVertical: "center",
-    paddingBottom: Spacing,
-    marginHorizontal: Spacing * 2,
     flexDirection: "row",
-    alignContent: "flex-end",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing * 2,
+    paddingBottom: Spacing,
   },
+
   username: {
     fontSize: 15,
     color: Colors.darkText,
@@ -156,21 +164,17 @@ const styles = StyleSheet.create({
     marginRight: Spacing * 2,
   },
   body: {
+    flex: 1,
     fontSize: 17,
     color: Colors.darkText,
     fontFamily: Font["inter-medium"],
     textAlign: "left",
-    textAlignVertical: "center",
     margin: Spacing * 2,
-    paddingBottom: 10,
     lineHeight: 27,
   },
-  container: {
-    textAlignVertical: "center",
+  header: {
     backgroundColor: Colors.lightyellow,
     paddingBottom: 28,
-    paddingTop: 0,
-    verticalAlign: "middle",
   },
   rectangle: {
     backgroundColor: Colors.white,
@@ -196,29 +200,25 @@ const styles = StyleSheet.create({
     left: 10,
     top: 25,
   },
-  content: {
-    flex: 1,
-  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    paddingHorizontal: Spacing * 2,
+    paddingVertical: Spacing,
     backgroundColor: Colors.white,
     borderTopWidth: 1,
-    borderTopColor: Colors.white,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
+    borderTopColor: Colors.lightyellow,
   },
   input: {
     flex: 1,
     borderWidth: 1,
     borderColor: Colors.yellow,
-    padding: 10,
-    marginRight: 10,
-    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginRight: Spacing,
+    borderRadius: 8,
     fontFamily: Font["inter-medium"],
+    fontSize: 16,
   },
   sendButton: {
     color: Colors.text,
@@ -226,6 +226,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   timestamp: {
-    paddingLeft: 120,
+    fontSize: 13,
+    color: Colors.darkText,
+    fontFamily: Font["inter-regular"],
   },
 });
