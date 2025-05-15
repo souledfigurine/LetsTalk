@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   KeyboardAvoidingView,
-  Platform,
   Keyboard,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/route/setdirectory";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import OpenLettersData from "@/components/data/OpenLetterData";
-import MainHeaderPost from "@/components/MainHeaderPost";
 import { Colors } from "@/constants/Colors";
 import Font from "@/constants/Font";
 import Spacing from "@/constants/Spacing";
@@ -22,15 +19,13 @@ import {
 } from "react-native-gesture-handler";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import FontSize from "@/constants/FontSize";
-import AppTextInput from "@/textinput/AppTextInput";
 import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { getOrCreateChat } from "../CozyChats/ChatHelper";
 import { getAuth } from "firebase/auth";
-import { addDoc, collection, serverTimestamp, query } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { database } from "@/firebaseconfig";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -100,8 +95,10 @@ const OpenLetterPostScreen: React.FC<Props> = ({
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <View style={styles.user}>
-                <Ionicons name="person-circle" size={24} color="black" />
-                <Text style={styles.username}> {post.Username} </Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Ionicons name="person-circle" size={24} color="black" />
+                  <Text style={styles.username}> {post.Username} </Text>
+                </View>
                 {formattedTimestamp && (
                   <Text style={styles.timestamp}>{formattedTimestamp}</Text>
                 )}
@@ -132,13 +129,11 @@ export default OpenLetterPostScreen;
 
 const styles = StyleSheet.create({
   user: {
-    textAlign: "left",
-    textAlignVertical: "center",
-    paddingBottom: Spacing,
-    marginHorizontal: Spacing * 2,
     flexDirection: "row",
-    alignContent: "flex-end",
-    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing * 2,
+    paddingBottom: Spacing,
   },
   username: {
     fontSize: 15,
@@ -224,6 +219,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   timestamp: {
-    paddingLeft: 120,
+    fontSize: 13,
+    color: Colors.darkText,
+    fontFamily: Font["inter-regular"],
   },
 });

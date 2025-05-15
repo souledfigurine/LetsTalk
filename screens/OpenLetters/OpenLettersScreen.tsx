@@ -5,32 +5,23 @@
 
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import MasonryList from "@react-native-seoul/masonry-list";
 import Font from "@/constants/Font";
-import FontSize from "@/constants/FontSize";
 import Spacing from "@/constants/Spacing";
 import { Colors } from "@/constants/Colors";
 import { FlatList } from "react-native";
 import MainHeader from "@/components/MainHeader";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 import {
   GestureHandlerRootView,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/route/setdirectory";
 import { useNavigation } from "@react-navigation/native";
-import OpenLetterPostScreen from "./OpenLetterPostScreen";
-import OpenLettersData from "@/components/data/OpenLetterData";
 import {
   collection,
-  addDoc,
-  serverTimestamp,
   Timestamp,
   orderBy,
   query,
-  where,
   onSnapshot,
 } from "firebase/firestore";
 import { database } from "@/firebaseconfig";
