@@ -1,8 +1,3 @@
-// Step 1: Fetch the API, check the data in the console --done!
-// Step 2: Use the data to update the state and use masonry list
-// Step 3: handle the errors and error state.
-// Step 4: Adding a loading indicator for a better user experience
-
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Font from "@/constants/Font";
@@ -26,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { database } from "@/firebaseconfig";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "OpenLetters">;
 
@@ -56,8 +52,8 @@ const OpenLettersScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   }, []);
 
   return (
-    <GestureHandlerRootView>
-      <View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <MainHeader title={"Open Letters"} />
         <View style={styles.createButton}>
           <TouchableOpacity
@@ -70,7 +66,7 @@ const OpenLettersScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ paddingBottom: 175, zIndex: 1 }}>
+        <View style={{ zIndex: 1 }}>
           <FlatList
             data={post}
             numColumns={2}
@@ -87,27 +83,21 @@ const OpenLettersScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
                     });
                   }}
                 >
-                  <View style={styles.user}>
-                    <Ionicons name="person-circle" size={20} color="black" />
-                    <Text style={styles.username}> {item.Username} </Text>
-                  </View>
+                  <View style={styles.content}>
+                    <View style={styles.user}>
+                      <Ionicons name="person-circle" size={20} color="black" />
+                      <Text style={styles.username}> {item.Username} </Text>
+                    </View>
 
-                  <Text
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                    style={styles.title}
-                  >
-                    {" "}
-                    {item.title}{" "}
-                  </Text>
-                  <Text
-                    numberOfLines={5}
-                    ellipsizeMode="tail"
-                    style={styles.body}
-                  >
-                    {" "}
-                    {item.body}{" "}
-                  </Text>
+                    <Text ellipsizeMode="tail" style={styles.title}>
+                      {" "}
+                      {item.title}{" "}
+                    </Text>
+                    <Text ellipsizeMode="tail" style={styles.body}>
+                      {" "}
+                      {item.body}{" "}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               );
             }}
@@ -120,17 +110,20 @@ const OpenLettersScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
 
 export default OpenLettersScreen;
 
+const numColumns = 2;
+const screenWidth = Dimensions.get("window").width;
+const horizontalPadding = 20; // paddingHorizontal in your FlatList container
+const gapBetweenItems = 20; // gap in columnWrapperStyle
+
+const itemWidth =
+  (screenWidth - horizontalPadding * 2 - gapBetweenItems) / numColumns;
 const styles = StyleSheet.create({
-  masonry: {
-    paddingHorizontal: 25,
-  },
   title: {
     fontSize: 15,
     color: Colors.darkText,
     fontFamily: Font["poppins-semiBold"],
     textAlign: "left",
     textAlignVertical: "center",
-    margin: Spacing,
   },
   body: {
     fontSize: 11,
@@ -138,27 +131,38 @@ const styles = StyleSheet.create({
     fontFamily: Font["inter-medium"],
     textAlign: "left",
     textAlignVertical: "center",
-    margin: Spacing,
-    paddingBottom: 10,
     lineHeight: 17.5,
+    flexShrink: 1,
+    flexWrap: "wrap",
   },
   container: {
     backgroundColor: Colors.lightPrimary,
     alignItems: "flex-start",
-    justifyContent: "top",
+    justifyContent: "flex-start",
     flexDirection: "column",
-    display: "flex",
     flex: 1,
     borderRadius: 15,
-    width: 165,
+    width: itemWidth,
     height: 200,
     marginLeft: 10,
+  },
+  content: {
+    backgroundColor: Colors.lightPrimary,
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "column",
+    flex: 1,
+    borderRadius: 15,
+    width: itemWidth,
+    height: 200,
+
+    padding: Spacing,
   },
   createButton: {
     position: "absolute",
     zIndex: 5,
     right: 50,
-    top: 550,
+    bottom: 30,
     backgroundColor: Colors.lightyellow,
     borderRadius: 100,
     shadowRadius: 2,
@@ -174,8 +178,7 @@ const styles = StyleSheet.create({
   user: {
     textAlign: "left",
     textAlignVertical: "center",
-    paddingBottom: 2,
-    marginTop: Spacing,
+    paddingBottom: 1,
     marginHorizontal: Spacing,
     flexDirection: "row",
   },
