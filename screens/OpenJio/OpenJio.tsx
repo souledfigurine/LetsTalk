@@ -5,14 +5,12 @@
 
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import MasonryList from "@react-native-seoul/masonry-list";
 import Font from "@/constants/Font";
 import FontSize from "@/constants/FontSize";
 import Spacing from "@/constants/Spacing";
 import { Colors } from "@/constants/Colors";
 import { FlatList } from "react-native";
 import MainHeader from "@/components/MainHeader";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 import {
   GestureHandlerRootView,
   TouchableOpacity,
@@ -21,8 +19,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/route/setdirectory";
 import { useNavigation } from "@react-navigation/native";
-import OpenJioPost from "./OpenJioPost";
-import OpenLettersData from "@/components/data/OpenLetterData";
 import { AntDesign, EvilIcons, Feather } from "@expo/vector-icons";
 import { database } from "@/firebaseconfig";
 import {
@@ -47,13 +43,13 @@ const OpenJioScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   useEffect(() => {
     const now = Timestamp.now();
     const oneDayAgo = Timestamp.fromMillis(
-      now.toMillis() - 24 * 60 * 60 * 1000
+      now.toMillis() - 24 * 60 * 60 * 1000,
     );
 
     const q = query(
       collection(database, "openJioPosts"),
       where("timestamp", ">=", oneDayAgo),
-      orderBy("timestamp", "desc")
+      orderBy("timestamp", "desc"),
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -68,7 +64,7 @@ const OpenJioScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
   }, []);
 
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <MainHeader title={"Open Jio!"} />
         <View style={styles.createButton}>
@@ -152,20 +148,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexWrap: "wrap",
   },
-  user: {
-    textAlign: "left",
-    textAlignVertical: "center",
-    paddingBottom: 1,
-    marginHorizontal: Spacing,
-    flexDirection: "row",
-  },
-  username: {
-    fontSize: 13,
-    color: Colors.darkText,
-    fontFamily: Font["poppins-regular"],
-    textAlign: "left",
-    textAlignVertical: "center",
-  },
   container: {
     backgroundColor: Colors.lightPrimary,
     alignItems: "flex-start",
@@ -176,7 +158,6 @@ const styles = StyleSheet.create({
     width: itemWidth,
     height: 200,
     marginLeft: 10,
-    padding: Spacing,
   },
   content: {
     backgroundColor: Colors.lightPrimary,
@@ -206,5 +187,19 @@ const styles = StyleSheet.create({
     width: 80,
     alignItems: "center",
     zIndex: 5,
+  },
+  user: {
+    textAlign: "left",
+    textAlignVertical: "center",
+    paddingBottom: 1,
+    marginHorizontal: Spacing,
+    flexDirection: "row",
+  },
+  username: {
+    fontSize: 13,
+    color: Colors.darkText,
+    fontFamily: Font["poppins-regular"],
+    textAlign: "left",
+    textAlignVertical: "center",
   },
 });
