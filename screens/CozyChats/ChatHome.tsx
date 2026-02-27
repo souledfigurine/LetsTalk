@@ -78,11 +78,11 @@ const ChatHome: React.FC<Props> = ({
         // Query for chats where the current user is either user1id or user2id
         const q1 = query(
           collection(database, "cozychats"),
-          where("user1Id", "==", currentUserId)
+          where("user1Id", "==", currentUserId),
         );
         const q2 = query(
           collection(database, "cozychats"),
-          where("user2Id", "==", currentUserId)
+          where("user2Id", "==", currentUserId),
         );
         const querySnapshot1 = await getDocs(q1);
         const querySnapshot2 = await getDocs(q2);
@@ -98,7 +98,7 @@ const ChatHome: React.FC<Props> = ({
                   ? chatData.user2Id
                   : chatData.user1Id;
               const otherUserDoc = await getDoc(
-                doc(database, "users", otherUserId)
+                doc(database, "users", otherUserId),
               );
               const otherUserName = otherUserDoc.exists()
                 ? otherUserDoc.data().username
@@ -107,11 +107,12 @@ const ChatHome: React.FC<Props> = ({
               return {
                 id: chatDoc.id,
                 lastMessage: chatData.lastMessage,
+                otherUserId,
                 otherUserName,
                 timestamp: chatData.timestamp.toDate(),
               };
-            }
-          )
+            },
+          ),
         );
 
         setChats(chatDetails);
@@ -180,7 +181,10 @@ const ChatHome: React.FC<Props> = ({
               <TouchableOpacity
                 style={styles.textrectangle}
                 onPress={() =>
-                  navigation.navigate("CozyChat", { chatId: item.id })
+                  navigation.navigate("CozyChat", {
+                    chatId: item.id,
+                    otherUserId: item.otherUserId,
+                  })
                 }
               >
                 <Image

@@ -72,7 +72,10 @@ const CozyChatScreen: React.FC<Props> = ({
   const [isReportModalVisible, setIsReportModalVisible] = useState(false);
   const database = getFirestore();
   const { params } = useRoute();
-  const { chatId } = params;
+  const { chatId, otherUserId } = params as {
+    chatId: string;
+    otherUserId: string;
+  };
 
   const handleBackPress = () => {
     navigate("ChatHome");
@@ -117,7 +120,7 @@ const CozyChatScreen: React.FC<Props> = ({
           createdAt: doc.data().createdAt.toDate(),
           text: doc.data().text,
           user: doc.data().user,
-        }))
+        })),
       );
     });
     return unsubscribe;
@@ -125,7 +128,7 @@ const CozyChatScreen: React.FC<Props> = ({
 
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
+      GiftedChat.append(previousMessages, messages),
     );
 
     const { _id, createdAt, text, user } = messages[0];
@@ -138,17 +141,9 @@ const CozyChatScreen: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserID(user.uid);
-        fetchUserName(user.uid);
-      } else {
-        console.error("User not authenticated");
-      }
-    });
-    return unsubscribe;
-  }, []);
+    if (!otherUserId) return;
+    fetchUserName(otherUserId);
+  }, [otherUserId]);
 
   const fetchUserName = async (userID) => {
     try {
